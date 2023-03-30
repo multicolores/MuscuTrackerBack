@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Exercise = require("../models/Exercise");
+const verify = require("./verifyToken");
 
 //Get every exercises or exercise of muscle
-router.get("/", async (req, res) => {
+router.get("/", verify, async (req, res) => {
     if (req.query.muscle) {
         let selectedMuscle = req.query.muscle;
         try {
@@ -28,7 +29,7 @@ router.get("/", async (req, res) => {
 });
 
 //Get a Specific exercise
-router.get("/:exerciseid", async (req, res) => {
+router.get("/:exerciseid", verify, async (req, res) => {
     try {
         const exercise = await Exercise.findById(req.params.exerciseid);
         res.json(exercise);
@@ -38,7 +39,7 @@ router.get("/:exerciseid", async (req, res) => {
 });
 
 // Post an exercise
-router.post("/", async (req, res) => {
+router.post("/", verify, async (req, res) => {
     const exercise = new Exercise({
         name: req.body.name,
         muscle: req.body.muscle,
@@ -54,7 +55,7 @@ router.post("/", async (req, res) => {
 });
 
 //Delete an exercise
-router.delete("/:exerciseid", async (req, res) => {
+router.delete("/:exerciseid", verify, async (req, res) => {
     try {
         const removeExercise = await Exercise.deleteOne({
             _id: req.params.exerciseid,
@@ -66,7 +67,7 @@ router.delete("/:exerciseid", async (req, res) => {
 });
 
 //Update an exercise
-router.patch("/:exerciseid", async (req, res) => {
+router.patch("/:exerciseid", verify, async (req, res) => {
     try {
         const updatedExercise = await Exercise.updateOne(
             { _id: req.params.exerciseid },

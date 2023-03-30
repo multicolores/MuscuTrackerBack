@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Workout = require("../models/Workout");
+const verify = require("./verifyToken");
 
 //Get every workouts
-router.get("/", async (req, res) => {
+router.get("/", verify, async (req, res) => {
     try {
         const workouts = await Workout.find();
         res.json(workouts);
@@ -13,7 +14,7 @@ router.get("/", async (req, res) => {
 });
 
 //Get a Specific workout
-router.get("/:workoutid", async (req, res) => {
+router.get("/:workoutid", verify, async (req, res) => {
     try {
         const workout = await Workout.findById(req.params.workoutid);
         res.json(workout);
@@ -23,7 +24,7 @@ router.get("/:workoutid", async (req, res) => {
 });
 
 // Post a workout
-router.post("/", async (req, res) => {
+router.post("/", verify, async (req, res) => {
     const workout = new Workout({
         name: req.body.name,
         exercise: req.body.exercise,
@@ -38,7 +39,7 @@ router.post("/", async (req, res) => {
 });
 
 //Delete a workout
-router.delete("/:workoutid", async (req, res) => {
+router.delete("/:workoutid", verify, async (req, res) => {
     try {
         const removeWorkout = await Workout.deleteOne({
             _id: req.params.workoutid,
@@ -50,7 +51,7 @@ router.delete("/:workoutid", async (req, res) => {
 });
 
 //Update a workout
-router.patch("/:workoutid", async (req, res) => {
+router.patch("/:workoutid", verify, async (req, res) => {
     try {
         const updatedWorkout = await Workout.updateOne(
             { _id: req.params.workoutid },
